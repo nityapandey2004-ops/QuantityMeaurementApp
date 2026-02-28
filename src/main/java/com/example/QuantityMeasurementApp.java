@@ -2,54 +2,62 @@ package com.example;
 
 public class QuantityMeasurementApp {
 	
-	public static double convert(double value, Length.LengthUnit source, Length.LengthUnit target) {
+	// generic equality demo
+		public static <U extends IMeasurable> boolean demonstrateEquality(Quantity<U> quantity1, Quantity<U> quantity2) {
 
-		if (source == null || target == null || !Double.isFinite(value)) {
-			throw new IllegalArgumentException();
+			return quantity1.equals(quantity2);
 		}
 
-		double baseValue = value * source.getConversionFactor();
-		return baseValue / target.getConversionFactor();
+		// generic conversion demo
+		// generic conversion demo
+		public static <U extends IMeasurable> Quantity<U> demonstrateConversion(Quantity<U> quantity, U targetUnit) {
+			return quantity.convertTo(targetUnit);
+		}
+
+		// generic addition (implicit target unit)
+		public static <U extends IMeasurable> Quantity<U> demonstrateAddition(Quantity<U> quantity1,
+				Quantity<U> quantity2) {
+
+			return quantity1.add(quantity2);
+		}
+
+		// generic addition (explicit target unit)
+		public static <U extends IMeasurable> Quantity<U> demonstrateAddition(Quantity<U> quantity1, Quantity<U> quantity2,
+				U targetUnit) {
+
+			return quantity1.add(quantity2, targetUnit);
+		}
+
+		public static void main(String[] args) {
+
+			// ----- LENGTH DEMO -----
+			Quantity<LengthUnit> length1 = new Quantity<>(1, LengthUnit.FEET);
+			Quantity<LengthUnit> length2 = new Quantity<>(12, LengthUnit.INCHES);
+
+			// equality check
+			System.out.println("1 Feet equals 12 Inches : " + length1.equals(length2));
+
+			// conversion
+			Quantity<LengthUnit> convertedLength = length1.convertTo(LengthUnit.INCHES);
+			System.out.println("1 Feet in Inches : " + convertedLength.getValue());
+
+			// addition
+			Quantity<LengthUnit> addedLength = length1.add(length2);
+			System.out.println("1 Feet + 12 Inches in Feet : " + addedLength.getValue());
+
+			// ----- WEIGHT DEMO -----
+			Quantity<WeightUnit> weight1 = new Quantity<>(1, WeightUnit.KILOGRAM);
+			Quantity<WeightUnit> weight2 = new Quantity<>(1000, WeightUnit.GRAM);
+
+			// equality check
+			System.out.println("1 Kg equals 1000 g : " + weight1.equals(weight2));
+
+			// conversion
+			Quantity<WeightUnit> convertedWeight = weight1.convertTo(WeightUnit.GRAM);
+			System.out.println("1 Kg in grams : " + convertedWeight.getValue());
+
+			// addition
+			Quantity<WeightUnit> addedWeight = weight1.add(weight2);
+			System.out.println("1 Kg + 1000 g in Kg : " + addedWeight.getValue());
+		}
 	}
-
-	// ---------- Equality ----------
-	public static boolean demonstrateLengthEquality(Length l1, Length l2) {
-		return l1.equals(l2);
-	}
-
-	public static boolean demonstrateLengthComparison(double v1, Length.LengthUnit u1, double v2,
-			Length.LengthUnit u2) {
-		return new Length(v1, u1).equals(new Length(v2, u2));
-	}
-
-	// ---------- Conversion ----------
-	public static Length demonstrateLengthConversion(double value, Length.LengthUnit from, Length.LengthUnit to) {
-		return new Length(value, from).convertTo(to);
-	}
-
-	public static Length demonstrateLengthConversion(Length length, Length.LengthUnit toUnit) {
-		return length.convertTo(toUnit);
-	}
-
-	// ---------- UC6 ----------
-	public static Length demonstrateLengthAddition(Length l1, Length l2) {
-		return l1.add(l2);
-	}
-
-	// ---------- UC7 NEW ----------
-	public static Length demonstrateLengthAddition(Length l1, Length l2, Length.LengthUnit targetUnit) {
-		return l1.add(l2, targetUnit);
-	}
-
-	public static void main(String[] args) {
-
-		Length l1 = new Length(1.0, Length.LengthUnit.FEET);
-		Length l2 = new Length(12.0, Length.LengthUnit.INCHES);
-
-		Length result1 = demonstrateLengthAddition(l1, l2);
-		System.out.println(result1);
-
-		Length result2 = demonstrateLengthAddition(l1, l2, Length.LengthUnit.YARDS);
-		System.out.println(result2);
-	}
-}
