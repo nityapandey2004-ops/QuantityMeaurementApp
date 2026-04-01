@@ -1,15 +1,7 @@
-package com.example;
+package com.example.core;
 
 import java.util.function.Function;
 
-/*
- * UC14 — Temperature Measurement Category
- *
- * Temperature supports:
- *  Equality
- *  Conversion
- *  Addition / Subtraction / Division (meaningless operations)
- */
 
 public enum TemperatureUnit implements IMeasurable {
 
